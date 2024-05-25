@@ -1,0 +1,13 @@
+{
+  "manifest_version": 3,
+  "name": "Buscar Reseñas",
+  "version": "1.0",
+  "description": "Extensión para buscar reseñas de texto seleccionado.",
+  "permissions": ["activeTab", "contextMenus", "storage"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html"
+  }
+}
