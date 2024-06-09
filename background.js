@@ -19,15 +19,3 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 });
 
 
-chrome.contextMenus.onClicked.addListener((e) => {
-    if (e.menuItemId === "review" && e.selectionText) {
-        chrome.storage.local.set({ "highlightedText": e.selectionText }, () => {
-            if (chrome.runtime.lastError) {
-                console.error("Error saving highlighted text:", chrome.runtime.lastError.message);
-            } else {
-                console.log("Highlighted text saved successfully:", e.selectionText);
-            }
-        });
-    }
-});
-

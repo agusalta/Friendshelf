@@ -1,0 +1,142 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+
+body {
+  font-family: "Poppins", sans-serif;
+  background-color: #f4f4f9;
+  color: #333;
+  margin: 0;
+  padding: 10px;
+  width: 600px;
+  margin: auto;
+}
+
+h1 {
+  font-size: 24px;
+  color: #333;
+  border-bottom: 2px solid #ff6b6b;
+  padding-bottom: 5px;
+  margin-bottom: 10px;
+}
+
+p {
+  font-size: 16px;
+  line-height: 1.5;
+  margin: 5px 0;
+}
+
+.logos {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  gap: 10px;
+}
+
+.texto {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin: 5px 0;
+}
+
+#results {
+  text: justify;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+#star-distribution {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 20px;
+  width: 50%;
+}
+
+#product-data {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #ff6b6b;
+  padding: 20px;
+  width: 50%;
+}
+
+#rating,
+#numReviews,
+#reviewerNotes {
+  margin: 5px 0;
+  padding: 2px 0;
+  font-weight: 500;
+  color: #555;
+}
+
+.rating-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  flex-direction: row;
+}
+
+#logo {
+  width: 90px;
+  height: 90px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+#face {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 8px;
+  background: #ddd;
+  outline: none;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  background: #ff6b6b;
+  cursor: pointer;
+  border-radius: 50%;
+
+}
+
+label {
+  font-size: 14px;
+  margin-right: 5px;
+}
+
+.star-bar-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.star-bar-container label,
+.star-bar-container input,
+.star-bar-container span {
+  margin-bottom: 2px;
+}
