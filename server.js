@@ -2,6 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import searchGoogleReviews from './data/google-reviews.js'
 import fetchData from './data/g2.js';
+import { insertProperties, checkIfProductExists } from "./mongoDB/products.js";
 
 const app = express();
 const PORT = 3000;
@@ -23,13 +24,26 @@ app.post('/api/g2', async (req, res) => {
     console.log("Query received:", query);
 
     try {
-        const result = await fetchData(query);
-        console.log(result)
-        res.json(result);
+        // Chequear si ya tenemos los datos en la base de datos
+        const existingData = await checkIfProductExists("extension_reviews", "products", query);
+
+        if (existingData) {
+            console.log(`Data for query "${query}" already exists in the database.`);
+            res.json(existingData);
+        } else {
+            // Si no tenemos los datos, se hace la solicitud a la API externa
+            const result = await fetchData(query);
+
+            // Insertar los resultados en la base de datos
+            await insertProperties("extension_reviews", "products", result);
+
+            res.json(result);
+        }
     } catch (error) {
-        res.status(500).json({ error: 'Failed to fetch data' });
+        res.status(500).json({ error: 'Failed to process request' });
     }
 });
+
 
 // Ruta POST para guardar la URL
 // app.post('/url/guardar-url', (req, res) => {

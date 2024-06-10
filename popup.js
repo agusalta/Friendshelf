@@ -1,10 +1,12 @@
-
 document.addEventListener('DOMContentLoaded', async () => {
     try {
         const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
 
         const currentUrl = document.querySelector("#current-url");
-        currentUrl.textContent = tab.url;
+        
+        if (currentUrl) {
+            currentUrl.textContent = tab.url;
+        }
 
         // await sendUrlToServer(tab.url);
 
@@ -12,6 +14,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error('Error retrieving active tab:', error);
     }
 });
+
 
 function setFaceImage(rating) {
     const roundedRating = Math.round(rating);
@@ -114,7 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         setRatingElement(result.rating);
                         reviewerNotesElement.textContent = `${result.reviews || 'No disponible'} reviews`;
                         whatIsElement.textContent = `${result.what_is || ''}`;
-                
+
                         const starDistribution = result.star_distribution || {};
                         const maxReviews = Math.max(...Object.values(starDistribution));
 
