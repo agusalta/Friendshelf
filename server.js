@@ -34,16 +34,19 @@ app.post('/api/g2', async (req, res) => {
             // Si no tenemos los datos, se hace la solicitud a la API externa
             const result = await fetchData(query);
 
-            // Insertar los resultados en la base de datos
-            await insertProperties("extension_reviews", "products", result);
-
-            res.json(result);
+            if (result.product_id !== null && result.product_id !== undefined) {
+                await insertProperties("extension_reviews", "products", result);
+                res.json(result);
+            } else {
+                console.log(`No valid data found for query "${query}". Skipping database insertion.`);
+                res.status(400).json({ error: 'No valid data found' });
+            }
         }
     } catch (error) {
+        console.error('Error:', error);
         res.status(500).json({ error: 'Failed to process request' });
     }
 });
-
 
 // Ruta POST para guardar la URL
 // app.post('/url/guardar-url', (req, res) => {

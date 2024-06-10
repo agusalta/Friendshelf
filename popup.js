@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
 
         const currentUrl = document.querySelector("#current-url");
-        
+
         if (currentUrl) {
             currentUrl.textContent = tab.url;
         }
@@ -115,7 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         logoReviewElement.src = result.product_logo;
                         numReviewsElement.textContent = result.rating;
                         setRatingElement(result.rating);
-                        reviewerNotesElement.textContent = `${result.reviews || 'No disponible'} reviews`;
+                        reviewerNotesElement.textContent = `${result.reviews || 'No se encontraron'} reviews`;
                         whatIsElement.textContent = `${result.what_is || ''}`;
 
                         const starDistribution = result.star_distribution || {};
@@ -125,6 +125,20 @@ document.addEventListener('DOMContentLoaded', () => {
                             const count = starDistribution[i] || 0;
                             starElements[i].value = (count / maxReviews) * 100;
                             starCountElements[i].textContent = count;
+                        }
+
+                        if (result.product_logo && result.product_logo.trim() !== "") {
+                            const logoReviewElement = document.querySelector('#logo');
+                            logoReviewElement.src = result.product_logo;
+                        } else {
+                            // Ocultar el elemento de la imagen del logo si no se ha asignado una imagen
+                            const logosContainer = document.querySelector('#logo');
+                            const productsData = document.querySelector('#product-data');
+                            logosContainer.style.display = 'none';
+
+                            productsData.style.display = 'flex';
+                            productsData.style.justifyContent = 'center';
+                            productsData.style.alignItems = 'center';
                         }
 
                     } else {
@@ -145,6 +159,20 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+document.addEventListener('DOMContentLoaded', function () {
+    var whatIs = document.getElementById("what-is");
+    var boton = document.getElementById("ver-mas-btn");
+
+    boton.addEventListener('click', function () {
+        if (whatIs.classList.contains("clamp")) {
+            whatIs.classList.remove("clamp");
+            boton.textContent = "See less...";
+        } else {
+            whatIs.classList.add("clamp");
+            boton.textContent = "See more...";
+        }
+    });
+});
 
 // async function sendUrlToServer(url) {
 //     try {

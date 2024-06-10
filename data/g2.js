@@ -10,8 +10,9 @@ const options = {
 };
 
 export default async function fetchData(query) {
+    let min = query.toLowerCase();
     try {
-        const response = await fetch(`https://g2-data-api.p.rapidapi.com/g2-products/?product=${query}`, options);
+        const response = await fetch(`https://g2-data-api.p.rapidapi.com/g2-products/?product=${min}`, options);
         return await response.json();
     } catch (error) {
         throw new Error('Failed to fetch data: ' + error.message);

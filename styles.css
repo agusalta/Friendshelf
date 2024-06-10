@@ -19,9 +19,41 @@ h1 {
 }
 
 p {
-  font-size: 16px;
+  font-size: 15px;
   line-height: 1.5;
   margin: 5px 0;
+  color: white;
+}
+
+#what-is-container {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  color: white;
+}
+
+#what-is {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+}
+
+.clamp {
+  -webkit-line-clamp: 5;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+#ver-mas-btn {
+  display: block;
+  color: black;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+  background-color: transparent;
 }
 
 .logos {
@@ -40,6 +72,7 @@ p {
 }
 
 #results {
+  position: relative;
   text: justify;
   display: flex;
   flex-direction: row;
@@ -76,7 +109,8 @@ p {
   margin: 5px 0;
   padding: 2px 0;
   font-weight: 500;
-  color: #555;
+  color: white;
+  font-weight: bold;
 }
 
 .rating-container {
@@ -120,12 +154,13 @@ input[type="range"]::-webkit-slider-thumb {
   background: #ff6b6b;
   cursor: pointer;
   border-radius: 50%;
-
 }
 
 label {
   font-size: 14px;
   margin-right: 5px;
+  color: red;
+  font-weight: 300;
 }
 
 .star-bar-container {
