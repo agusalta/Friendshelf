@@ -1,14 +1,22 @@
 {
   "manifest_version": 3,
-  "name": "Buscar Reseñas",
-  "version": "1.0",
-  "description": "Extensión para buscar reseñas de texto seleccionado.",
-  "permissions": ["activeTab", "contextMenus", "storage"],
+  "name": "G2 Reviews Extension",
+  "version": "2.0",
+  "description": "Busca reseñas de productos de G2 directamente desde el texto seleccionado.",
+  "permissions": ["activeTab", "contextMenus", "storage", "scripting"],
   "background": {
     "service_worker": "background.js"
   },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_end"
+    }
+  ],
   "action": {
-    "default_popup": "popup.html"
+    "default_popup": "popup.html",
+    "scripts": ["popup.js"]
   },
   "icons": {
     "16": "icons/icon16.png",

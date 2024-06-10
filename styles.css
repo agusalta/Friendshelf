@@ -25,6 +25,10 @@ p {
   color: white;
 }
 
+#current-text {
+  color: black;
+}
+
 #what-is-container {
   display: flex;
   justify-content: center;
