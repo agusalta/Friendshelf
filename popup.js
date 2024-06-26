@@ -15,6 +15,21 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
+const starElements = {
+    1: document.querySelector('#star-1'),
+    2: document.querySelector('#star-2'),
+    3: document.querySelector('#star-3'),
+    4: document.querySelector('#star-4'),
+    5: document.querySelector('#star-5')
+};
+
+const starCountElements = {
+    1: document.querySelector('#star-1-count'),
+    2: document.querySelector('#star-2-count'),
+    3: document.querySelector('#star-3-count'),
+    4: document.querySelector('#star-4-count'),
+    5: document.querySelector('#star-5-count')
+};
 
 function setFaceImage(rating) {
     const roundedRating = Math.round(rating);
@@ -44,12 +59,12 @@ function setFaceImage(rating) {
     return faceSrc;
 }
 
-function setRatingElement(rating) {
+function setReviewRatingElement(rating, containerId) {
     const starFilled = './assets/star-filled.png';
     const starEmpty = './assets/star-empty.png';
     const starHalf = './assets/star-half.png';
 
-    const starContainer = document.querySelector('#reviews');
+    const starContainer = document.querySelector(containerId);
     starContainer.innerHTML = '';
 
     for (let i = 1; i <= 5; i++) {
@@ -65,6 +80,34 @@ function setRatingElement(rating) {
     }
 }
 
+async function getProductDeals(title) {
+    try {
+        const response = await fetch('http://localhost:3000/api/title', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ title })
+        });
+
+        if (!response.ok) {
+            throw new Error('Error fetching deals:', response.statusText);
+        }
+
+        const deal = await response.json();
+
+        if (!deal) {
+            throw new Error('No se encontró ningún deal en la respuesta.');
+        }
+
+        console.log("Deal: " + deal)
+        return deal;
+    } catch (err) {
+        console.error('Error fetching deals:', err);
+        return null;
+    }
+}
+
 
 document.addEventListener('DOMContentLoaded', () => {
     const textElement = document.querySelector("#current-text");
@@ -74,22 +117,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const logoReviewElement = document.querySelector('#logo');
     const faceElement = document.querySelector('#face');
     const whatIsElement = document.querySelector('#what-is');
-
-    const starElements = {
-        1: document.querySelector('#star-1'),
-        2: document.querySelector('#star-2'),
-        3: document.querySelector('#star-3'),
-        4: document.querySelector('#star-4'),
-        5: document.querySelector('#star-5')
-    };
-
-    const starCountElements = {
-        1: document.querySelector('#star-1-count'),
-        2: document.querySelector('#star-2-count'),
-        3: document.querySelector('#star-3-count'),
-        4: document.querySelector('#star-4-count'),
-        5: document.querySelector('#star-5-count')
-    };
 
     chrome.storage.local.get("highlightedText", async (result) => {
         if (chrome.runtime.lastError) {
@@ -114,18 +141,55 @@ document.addEventListener('DOMContentLoaded', () => {
                         faceElement.src = setFaceImage(result.rating);
                         logoReviewElement.src = result.product_logo;
                         numReviewsElement.textContent = result.rating;
-                        setRatingElement(result.rating);
+                        setReviewRatingElement(result.rating, "#reviews");
                         reviewerNotesElement.textContent = `${result.reviews || 'No se encontraron'} reviews`;
                         whatIsElement.textContent = `${result.what_is || ''}`;
 
-                        const starDistribution = result.star_distribution || {};
-                        const maxReviews = Math.max(...Object.values(starDistribution));
+                        // Ofertas
+                        const prodDealsTitle = document.querySelector('#product_deals_title');
+                        const prodDealsDiscount = document.querySelector('#product_deals_discount');
+                        const prodDealsClaimOfferDetails = document.querySelector('#product_deals_claim_details');
+                        const prodDealsOfferDetails = document.querySelector('#product_deals_offer_details');
 
-                        for (let i = 1; i <= 5; i++) {
-                            const count = starDistribution[i] || 0;
-                            starElements[i].value = (count / maxReviews) * 100;
-                            starCountElements[i].textContent = count;
+
+                        if (result.product_name) {
+                            const deal = await getProductDeals(result.product_name);
+
+                            if (deal) {
+                                prodDealsTitle.textContent = deal.prod_title || '';
+                                prodDealsDiscount.textContent = deal.prod_discount || '';
+                                prodDealsClaimOfferDetails.textContent = deal.prod_claim_offer_details || '';
+                                prodDealsOfferDetails.textContent = deal.prod_offer_details || '';
+
+                                if (result.pricing_plans !== null && result.pricing_plans.length > 0) {
+                                    for (let i = 0; i < result.pricing_plans.length; i++) {
+                                        const prodDealsPricingPlans = document.querySelector('#product_pricing_plans');
+                                        const pricingPlan = document.createElement('div');
+                                        const planName = document.createElement('p')
+                                        const planPrice = document.createElement('p')
+                                        const planDesc = document.createElement('p')
+                                        const planFeatures = document.createElement('ul')
+                                        const planFeature = document.createElement('li')
+
+                                        planName.textContent = result.pricing_plans[i].plan_name;
+                                        planPrice.textContent = result.pricing_plans[i].plan_price;
+                                        planDesc.textContent = result.pricing_plans[i].plan_desc;
+
+                                        for (let j = 0; j < result.pricing_plans[i].plan_features.length; j++) {
+                                            planFeature.textContent = result.pricing_plans[i].plan_features[j];
+                                            planFeatures.appendChild(planFeature);
+                                        }
+
+                                        pricingPlan.appendChild(planName);
+                                        pricingPlan.appendChild(planPrice);
+                                        pricingPlan.appendChild(planDesc);
+                                        pricingPlan.appendChild(planFeatures);
+                                        prodDealsPricingPlans.appendChild(pricingPlan);
+                                    }
+                                }
+                            }
                         }
+                        //
 
                         if (result.product_logo && result.product_logo.trim() !== "") {
                             const logoReviewElement = document.querySelector('#logo');
@@ -142,14 +206,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
 
                     } else {
-                        ratingElement.textContent = 'No se encontraron reviews de este producto.';
+                        ratingElement.textContent = 'No reviews available';
                         numReviewsElement.textContent = '';
                         whatIsElement.textContent = '';
                         reviewerNotesElement.textContent = '';
-                        for (let i = 1; i <= 5; i++) {
-                            starElements[i].value = 0;
-                            starCountElements[i].textContent = '';
-                        }
+
                     }
                 } catch (error) {
                     console.error('Error sending TEXT to server:', error);
@@ -159,19 +220,124 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-document.addEventListener('DOMContentLoaded', function () {
-    var whatIs = document.getElementById("what-is");
-    var boton = document.getElementById("ver-mas-btn");
+// document.addEventListener('DOMContentLoaded', function () {
+//     var goBackButton = document.querySelector('#go-back-btn');
 
-    boton.addEventListener('click', function () {
-        if (whatIs.classList.contains("clamp")) {
-            whatIs.classList.remove("clamp");
-            boton.textContent = "See less...";
-        } else {
-            whatIs.classList.add("clamp");
-            boton.textContent = "See more...";
+//     if (goBackButton) {
+//         goBackButton.addEventListener('click', function () {
+//             fetch(chrome.runtime.getURL('popup.html'))
+//                 .then(response => response.text())
+//                 .then(data => document.getElementById('results').innerHTML = data)
+//                 .catch(error => console.error('Error fetching popup.html:', error));
+//         });
+//     } else {
+//         console.error('go-back-btn element not found');
+//     }
+// });
+
+document.addEventListener('DOMContentLoaded', function () {
+    var seeReviewsBtn = document.getElementById('see-reviews-btn');
+    seeReviewsBtn.addEventListener('click', async function () {
+        try {
+            const highlightedText = await getHighlightedText();
+
+            const response = await fetch('http://localhost:3000/api/g2', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ query: highlightedText })
+            });
+            const result = await response.json();
+
+            const bestReviewElement = document.querySelector('#best-review');
+            const worstReviewElement = document.querySelector('#worst-review');
+
+            if (result.initial_reviews && result.initial_reviews.length) {
+                let best = {}, worst = {};
+                let min = Infinity, max = -Infinity;
+
+                for (let i = 0; i < result.initial_reviews.length; i++) {
+                    if (result.initial_reviews[i].review_rating > max) {
+                        max = result.initial_reviews[i].review_rating;
+                        best = result.initial_reviews[i];
+                    } else if (result.initial_reviews[i].review_rating < min) {
+                        min = result.initial_reviews[i].review_rating;
+                        worst = result.initial_reviews[i];
+                    }
+                }
+
+                if (best.review_title !== 'NOT GIVEN' || worst.review_title !== 'NOT GIVEN') {
+                    bestReviewElement.querySelector('#best-review_title').textContent = best.review_title;
+                    worstReviewElement.querySelector('#worst-review_title').textContent = worst.review_title;
+                }
+
+                setReviewRatingElement(best.review_rating, '#best-review_rating');
+                bestReviewElement.querySelector('#best-review_rating').textContent = best.review_rating;
+                bestReviewElement.querySelector('#best-review_content').textContent = best.review_content;
+                bestReviewElement.querySelector('#best-review_date').textContent = best.publish_date;
+                bestReviewElement.querySelector('#best-reviewer_name').textContent = best.reviewer_name;
+                bestReviewElement.querySelector('#best-reviewer_company-size').textContent = best.reviewer_company_size;
+
+                setReviewRatingElement(worst.review_rating, '#worst-review_rating');
+                worstReviewElement.querySelector('#worst-review_rating').textContent = worst.review_rating;
+                worstReviewElement.querySelector('#worst-review_content').textContent = worst.review_content;
+                worstReviewElement.querySelector('#worst-review_date').textContent = worst.publish_date;
+                worstReviewElement.querySelector('#worst-reviewer_name').textContent = worst.reviewer_name;
+                worstReviewElement.querySelector('#worst-reviewer_company-size').textContent = worst.reviewer_company_size;
+            } else {
+                bestReviewElement.textContent = "No good reviews available";
+                worstReviewElement.textContent = "no bad reviews available";
+            }
+
+            if (result.star_distribution) {
+                const starDistribution = result.star_distribution || {};
+                const maxReviews = Math.max(...Object.values(starDistribution));
+
+                for (let i = 1; i <= 5; i++) {
+                    const count = starDistribution[i] || 0;
+                    starElements[i].value = (count / maxReviews) * 100;
+                    starCountElements[i].textContent = count;
+                }
+            } else {
+                for (let i = 1; i <= 5; i++) {
+                    starElements[i].value = 0;
+                    starCountElements[i].textContent = '';
+                }
+            }
+
+        } catch (error) {
+            console.error('Error fetching reviews:', error);
         }
     });
+});
+
+async function getHighlightedText() {
+    return new Promise((resolve, reject) => {
+        chrome.storage.local.get("highlightedText", (result) => {
+            if (chrome.runtime.lastError) {
+                reject(chrome.runtime.lastError.message);
+            } else {
+                const highlightedText = result.highlightedText;
+                resolve(highlightedText || "");
+            }
+        });
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    var seeReviewsBtn = document.getElementById('see-reviews-btn');
+
+    if (seeReviewsBtn) {
+        seeReviewsBtn.addEventListener('click', function () {
+            fetch(chrome.runtime.getURL('reviews.html'))
+                .then(response => response.text())
+                .then(data => document.getElementById('results').innerHTML = data)
+                .catch(error => console.error('Error fetching reviews.html:', error));
+        });
+    } else {
+        console.error('see-reviews-btn element not found');
+    }
 });
 
 // async function sendUrlToServer(url) {
@@ -191,25 +357,5 @@ document.addEventListener('DOMContentLoaded', function () {
 //         }
 //     } catch (error) {
 //         console.error('Error sending URL to server:', error);
-//     }
-// }
-
-// async function sendTextToServer(text) {
-//     try {
-//         const response = await fetch('http://localhost:3000/texto/guardar-texto', {
-//             method: 'POST',
-//             headers: {
-//                 'Content-Type': 'application/json'
-//             },
-//             body: JSON.stringify({ text })
-//         });
-
-//         if (response.ok) {
-//             console.log('TEXT successfully sent to server.');
-//         } else {
-//             console.error('Error sending TEXT to server:', response.statusText);
-//         }
-//     } catch (err) {
-//         console.error('Error sending TEXT to server:', error);
 //     }
 // }

@@ -2,13 +2,15 @@
 <html>
   <head>
     <title>URL Display</title>
-    <script src="popup.js"></script>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <h1>Texto resaltado</h1>
-    <p id="current-text"></p>
-    <h1>Reviews encontradas</h1>
+    <div id="highlight">
+      <h1>Texto resaltado</h1>
+      <p id="current-text"></p>
+      <h1>Reviews encontradas</h1>
+    </div>
+
     <div id="results">
       <section id="product-data">
         <div class="logos">
@@ -22,36 +24,21 @@
             <p id="numReviews"></p>
           </div>
           <p id="reviewerNotes"></p>
+          <button class="btn" id="see-reviews-btn">See more</button>
           <div id="what-is-container">
             <div id="what-is" class="clamp"></div>
-            <button id="ver-mas-btn">See more...</button>
+            <button class="btn" id="ver-mas-btn">See more...</button>
           </div>
         </div>
       </section>
-      <section id="star-distribution">
-        <h2>Stars distribution</h2>
-        <div class="star-bar-container">
-          <label for="star-1">1 star</label>
-          <input type="range" id="star-1" max="100" value="0" disabled />
-          <span id="star-1-count"></span>
-          <br />
-          <label for="star-2">2 stars</label>
-          <input type="range" id="star-2" max="100" value="0" disabled />
-          <span id="star-2-count"></span>
-          <br />
-          <label for="star-3">3 stars</label>
-          <input type="range" id="star-3" max="100" value="0" disabled />
-          <span id="star-3-count"></span>
-          <br />
-          <label for="star-4">4 stars</label>
-          <input type="range" id="star-4" max="100" value="0" disabled />
-          <span id="star-4-count"></span>
-          <br />
-          <label for="star-5">5 stars</label>
-          <input type="range" id="star-5" max="100" value="0" disabled />
-          <span id="star-5-count"></span>
-        </div>
+      <section id="product_deals">
+        <h2 id="product_deals_title"></h2>
+        <p id="product_deals_discount"></p>
+        <p id="product_deals_claim_details"></p>
+        <p id="product_deals_offer_details"></p>
+        <div id="product_pricing_plans"></div>
       </section>
     </div>
+    <script src="popup.js"></script>
   </body>
 </html>

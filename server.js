@@ -1,11 +1,15 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+import dotenv from 'dotenv';
 import searchGoogleReviews from './data/google-reviews.js'
 import fetchData from './data/g2.js';
-import { insertProperties, checkIfProductExists } from "./mongoDB/products.js";
+import { insertProperties, checkIfProductExists, getAllProducts } from "./mongoDB/products.js";
+import { getDeal } from './mongoDB/deals.js';
+
+dotenv.config();
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 8081;
 
 app.use(bodyParser.json());
 
@@ -45,6 +49,33 @@ app.post('/api/g2', async (req, res) => {
     } catch (error) {
         console.error('Error:', error);
         res.status(500).json({ error: 'Failed to process request' });
+    }
+});
+
+app.post('/api/title', async (req, res) => {
+    const { title } = req.body;
+    console.log("Deal received:", title);
+    try {
+        const deal = await getDeal(title);
+
+        if (deal) {
+            res.json(deal);
+        } else {
+            res.status(404).json({ error: 'Deal not found' });
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: 'Failed to process request' });
+    }
+});
+
+app.get('/api/products', async (req, res) => {
+    try {
+        const products = await getAllProducts("extension_reviews", "products");
+        res.json(products);
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: 'Failed to fetch products' });
     }
 });
 

@@ -35,8 +35,6 @@ export async function checkIfProductExists(db, col, productName) {
         const client = await getConnection();
         const database = client.db(db);
         const collection = database.collection(col);
-
-        // Buscar un documento que tenga el nombre de producto especificado
         const existingDocument = await collection.findOne({ product_name: productName });
         return existingDocument;
     } catch (error) {
@@ -45,3 +43,22 @@ export async function checkIfProductExists(db, col, productName) {
     }
 }
 
+export async function getAllProducts(db, col) {
+    let client;
+
+    try {
+        client = await getConnection();
+        const database = client.db(db);
+        const collection = database.collection(col);
+        const products = await collection.find({}).toArray();
+        return products;
+
+    } catch (error) {
+        console.error('Error getting all products:', error);
+        throw error;
+    } finally {
+        if (client) {
+            await client.close();
+        }
+    }
+}
