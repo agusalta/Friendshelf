@@ -1,3 +1,5 @@
+let actualFaceStatusCodeSrc;
+
 document.addEventListener('DOMContentLoaded', async () => {
     try {
         const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
@@ -8,6 +10,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             currentUrl.textContent = tab.url;
         }
 
+        actualFaceStatusCodeSrc = 0;
         // await sendUrlToServer(tab.url);
 
     } catch (error) {
@@ -56,6 +59,7 @@ function setFaceImage(rating) {
             break;
     }
 
+    actualFaceStatusCodeSrc = roundedRating;
     return faceSrc;
 }
 
@@ -189,7 +193,6 @@ document.addEventListener('DOMContentLoaded', () => {
                                 }
                             }
                         }
-                        //
 
                         if (result.product_logo && result.product_logo.trim() !== "") {
                             const logoReviewElement = document.querySelector('#logo');
@@ -339,6 +342,26 @@ document.addEventListener('DOMContentLoaded', function () {
         console.error('see-reviews-btn element not found');
     }
 });
+
+document.addEventListener('DOMContentLoaded', function () {
+    let switchBtn = document.querySelector('#toggle-mode');
+    switchBtn.addEventListener('click', function () {
+        const body = document.body;
+        let toggleIcon = document.querySelector('#extension-icon');
+        let toggleFace = document.querySelector('#face');
+        let isDarkMode = body.classList.toggle("dark-mode");
+
+        if (isDarkMode) {
+            toggleIcon.src = '/assets/logo/light-logo-70.png';
+            toggleFace.src = `/assets/faces/${actualFaceStatusCodeSrc}w.png`;
+        } else {
+            toggleIcon.src = '/assets/logo/dark-logo-70.png';
+            toggleFace.src = `/assets/faces/${actualFaceStatusCodeSrc}.png`;
+        }
+
+    });
+});
+
 
 // async function sendUrlToServer(url) {
 //     try {
