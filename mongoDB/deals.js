@@ -1,5 +1,5 @@
 import getConnection from "./connection.js";
-import { deals } from "../assets/deals/deals-list.js";
+
 export async function getDeal(title) {
     try {
         const client = await getConnection();

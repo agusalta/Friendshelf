@@ -3,7 +3,7 @@
 :root {
   --primary-color: #ffffff;
 
-  --btn-background-color: #0c0d42;
+  --btn-background-color: #3a3ec7;
   --btn-text-color: #ffffff;
 
   --text-color: black;
@@ -18,10 +18,10 @@
 }
 
 body.dark-mode {
-  --primary-color: #0c0d42;
+  --primary-color: #3a3ec7;
   --text-color: #ffffff;
   --btn-background-color: #ffffff;
-  --btn-text-color: #0c0d42;
+  --btn-text-color: #3a3ec7;
 }
 
 .switch {
@@ -57,13 +57,13 @@ body.dark-mode {
   width: 16px;
   left: 4px;
   bottom: 4px;
-  background-color: white;
+  background-color: var(--color-primary);
   transition: 0.4s;
   border-radius: 50%;
 }
 
 input:checked + .slider {
-  background-color: whitesmoke;
+  background-color: white;
 }
 
 input:checked + .slider:before {
@@ -71,11 +71,11 @@ input:checked + .slider:before {
 }
 
 .slider {
-  background-color: #0c0d42;
+  background-color: #3a3ec7;
 }
 
 .slider:before {
-  background-color: #fff;
+  background-color: #ccc;
 }
 
 body {
@@ -228,12 +228,9 @@ nav ul li a {
 }
 
 #product_deals {
-  display: none;
   padding: 10px;
-  background-color: #fff;
-  border-radius: var(--border-radius);
-  box-shadow: var(--box-shadow);
-  margin: 10px 0;
+  margin: 25px;
+  background-color: var(--primary-color);
 }
 
 #product_deals_title {
@@ -248,8 +245,8 @@ nav ul li a {
 #product_deals_discount,
 #product_deals_claim_details,
 #product_deals_offer_details {
-  font-size: 16px;
-  color: #555;
+  font-size: 15px;
+  color: var(--text-color);
   margin: 10px 0;
 }
 
@@ -257,6 +254,7 @@ nav ul li a {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  text-transform: uppercase;
 }
 
 #product_pricing_plans .plan {
@@ -276,7 +274,7 @@ nav ul li a {
 
 #product_pricing_plans .plan p {
   font-size: 14px;
-  color: #666;
+  color: var(--text-color);
   margin: 5px 0;
 }
 
@@ -322,6 +320,7 @@ nav ul li a {
 #face {
   width: 50px;
   height: 50px;
+  padding: 10px;
   border-radius: 50%;
   object-fit: cover;
 }
@@ -350,7 +349,7 @@ input[type="range"]::-webkit-slider-thumb {
 label {
   font-size: 14px;
   margin-right: 5px;
-  color: red;
+  color: var(--text-color);
   font-weight: 300;
 }
 
@@ -372,15 +371,12 @@ label {
 #product-reviews {
   max-width: 800px;
   padding: 10px;
-  background-color: #fff;
-  border-radius: var(--border-radius);
-  box-shadow: var(--box-shadow);
+  background-color: var(--background-color);
 }
 
 #best-review,
 #worst-review {
-  margin-bottom: 20px;
-  border: 1px solid #e0e0e0;
+  margin-bottom: 10px;
   padding: 20px;
   border-radius: var(--border-radius);
   box-shadow: var(--box-shadow);
@@ -403,19 +399,19 @@ label {
   font-weight: bold;
   font-size: 32px;
   font-style: italic;
-  color: #666;
+  color: var(--text-color);
 }
 
 #best-review_content,
 #worst-review_content {
   font-size: 12px;
-  color: #555;
+  color: var(--text-color);
 }
 
 #best-review_date,
 #worst-review_date {
   font-size: 14px;
-  color: #888;
+  color: var(--text-color);
 }
 
 #best-reviewer_name,
@@ -423,5 +419,7 @@ label {
 #best-reviewer_company-size,
 #worst-reviewer_company-size {
   font-size: 14px;
-  color: #888;
+  color: var(--text-color);
 }
+
+// LOGIN - REGISTER

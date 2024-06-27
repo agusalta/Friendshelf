@@ -1,15 +1,15 @@
 {
   "manifest_version": 3,
-  "name": "G2 Reviews Extension",
+  "name": "Friendshelf",
   "version": "2.0",
-  "description": "Busca reseñas de productos de G2 directamente desde el texto seleccionado.",
+  "description": "Your softwaredeals and reviews application",
   "permissions": ["activeTab", "contextMenus", "storage", "scripting"],
   "background": {
     "service_worker": "background.js"
   },
   "action": {
     "default_popup": "popup.html",
-    "scripts": ["popup.js"]
+    "scripts": ["popup.js", "authentication.js"]
   },
   "content_scripts": [
     {

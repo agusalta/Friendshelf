@@ -112,7 +112,6 @@ async function getProductDeals(title) {
     }
 }
 
-
 document.addEventListener('DOMContentLoaded', () => {
     const textElement = document.querySelector("#current-text");
     const ratingElement = document.querySelector('#rating');
@@ -290,7 +289,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 worstReviewElement.querySelector('#worst-reviewer_company-size').textContent = worst.reviewer_company_size;
             } else {
                 bestReviewElement.textContent = "No good reviews available";
-                worstReviewElement.textContent = "no bad reviews available";
+                worstReviewElement.textContent = "No bad reviews available";
             }
 
             if (result.star_distribution) {

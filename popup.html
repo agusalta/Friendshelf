@@ -5,62 +5,63 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <div id="highlight">
-      <h1>Texto resaltado</h1>
-      <p id="current-text"></p>
-      <h1>Reviews encontradas</h1>
-    </div>
+    <header>
+      <nav>
+        <ul>
+          <li>
+            <img
+              id="extension-icon"
+              src="/assets/logo/dark-logo-70.png"
+              alt="friendshelf icon"
+            />
+          </li>
+          <li><a href="login.html">Login</a></li>
+          <li><a href="register.html">Register</a></li>
+          <li>
+            <label class="switch">
+              <input id="toggle-mode" type="checkbox" />
+              <span class="slider"></span>
+            </label>
+          </li>
+        </ul>
+      </nav>
+    </header>
 
-    <div id="results">
-      <header>
-        <nav>
-          <ul>
-            <li>
-              <img
-                id="extension-icon"
-                src="/assets/logo/dark-logo-70.png"
-                alt="friendshelf icon"
-              />
-            </li>
-            <li><a href="#">Login</a></li>
-            <li><a href="#">Register</a></li>
-            <li>
-              <label class="switch">
-                <input id="toggle-mode" type="checkbox" />
-                <span class="slider"></span>
-              </label>
-            </li>
-          </ul>
-        </nav>
-      </header>
+    <main id="content">
+      <section id="highlight">
+        <h1>Texto resaltado</h1>
+        <p id="current-text"></p>
+      </section>
 
-      <section id="product-data">
-        <div class="logos">
-          <img id="logo" src="" alt="page-logo" />
-          <img id="face" src="" alt="status code face" />
-        </div>
-        <div class="texto">
-          <div class="rating-container">
-            <p id="reviews"></p>
-            <p id="rating"></p>
-            <p id="numReviews"></p>
+      <section id="results">
+        <div id="product-data">
+          <div class="logos">
+            <img id="logo" src="" alt="page-logo" />
+            <img id="face" src="" alt="status code face" />
           </div>
-          <p id="reviewerNotes"></p>
-          <button class="btn" id="see-reviews-btn">See more</button>
-          <div id="what-is-container">
-            <div id="what-is" class="clamp"></div>
-            <button class="btn" id="ver-mas-btn">See more...</button>
+          <div class="texto">
+            <div class="rating-container">
+              <p id="reviews"></p>
+              <p id="rating"></p>
+              <p id="numReviews"></p>
+            </div>
+            <p id="reviewerNotes"></p>
+            <button class="btn" id="see-reviews-btn">See more</button>
+            <div id="what-is-container">
+              <div id="what-is" class="clamp"></div>
+              <button class="btn" id="ver-mas-btn">See more...</button>
+            </div>
           </div>
         </div>
+        <section id="product_deals">
+          <h3 id="product_deals_title"></h3>
+          <p id="product_deals_discount"></p>
+          <p id="product_deals_claim_details"></p>
+          <p id="product_deals_offer_details"></p>
+          <div id="product_pricing_plans"></div>
+        </section>
       </section>
-      <section id="product_deals">
-        <h2 id="product_deals_title"></h2>
-        <p id="product_deals_discount"></p>
-        <p id="product_deals_claim_details"></p>
-        <p id="product_deals_offer_details"></p>
-        <div id="product_pricing_plans"></div>
-      </section>
-    </div>
+    </main>
     <script src="popup.js"></script>
   </body>
 </html>
