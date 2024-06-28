@@ -6,6 +6,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const currentUrl = document.querySelector("#current-url");
 
+        const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const extensionIcon = document.querySelector("#extension-icon");
+
+        if (prefersDarkMode) {
+            extensionIcon.src = "/assets/logo/light-logo-70.png"
+        } else {
+            extensionIcon.src = "/assets/logo/dark-logo-70.png"
+        }
+
         if (currentUrl) {
             currentUrl.textContent = tab.url;
         }
@@ -35,31 +44,32 @@ const starCountElements = {
 };
 
 function setFaceImage(rating) {
+    const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
     const roundedRating = Math.round(rating);
     let faceSrc;
 
     switch (roundedRating) {
         case 5:
-            faceSrc = 'assets/faces/5.png';
+            faceSrc = prefersDarkMode ? 'assets/faces/5w.png' : 'assets/faces/5.png';
             break;
         case 4:
-            faceSrc = 'assets/faces/4.png';
+            faceSrc = prefersDarkMode ? 'assets/faces/4w.png' : 'assets/faces/4.png';
             break;
         case 3:
-            faceSrc = 'assets/faces/3.png';
+            faceSrc = prefersDarkMode ? 'assets/faces/3w.png' : 'assets/faces/3.png';
             break;
         case 2:
-            faceSrc = 'assets/faces/2.png';
+            faceSrc = prefersDarkMode ? 'assets/faces/2w.png' : 'assets/faces/2.png';
             break;
         case 1:
-            faceSrc = 'assets/faces/1.png';
+            faceSrc = prefersDarkMode ? 'assets/faces/1w.png' : 'assets/faces/1.png';
             break;
         default:
-            faceSrc = 'assets/faces/3.png';
+            faceSrc = prefersDarkMode ? 'assets/faces/3w.png' : 'assets/faces/3.png';
             break;
     }
 
-    actualFaceStatusCodeSrc = roundedRating;
+    actualFaceStatusCodeSrc = roundedRating; // Actualiza la variable global
     return faceSrc;
 }
 
@@ -94,20 +104,15 @@ async function getProductDeals(title) {
             body: JSON.stringify({ title })
         });
 
-        if (!response.ok) {
-            throw new Error('Error fetching deals:', response.statusText);
-        }
-
         const deal = await response.json();
 
-        if (!deal) {
-            throw new Error('No se encontró ningún deal en la respuesta.');
+        if (!deal || !response.ok) {
+            throw new Error('No deal found');
         }
 
         console.log("Deal: " + deal)
         return deal;
     } catch (err) {
-        console.error('Error fetching deals:', err);
         return null;
     }
 }
@@ -344,12 +349,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
 document.addEventListener('DOMContentLoaded', function () {
     let switchBtn = document.querySelector('#toggle-mode');
+    const body = document.body;
+
+    // Preferencia de color del sistema
+    const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    // Aplicar el modo oscuro si el sistema lo prefiere
+    if (prefersDarkMode) {
+        body.classList.add('dark-mode');
+    }
+
+    // Listener para cambiar entre modos
     switchBtn.addEventListener('click', function () {
-        const body = document.body;
         let toggleIcon = document.querySelector('#extension-icon');
         let toggleFace = document.querySelector('#face');
         let isDarkMode = body.classList.toggle("dark-mode");
 
+        // Cambiar los íconos y rostros según el modo
         if (isDarkMode) {
             toggleIcon.src = '/assets/logo/light-logo-70.png';
             toggleFace.src = `/assets/faces/${actualFaceStatusCodeSrc}w.png`;
@@ -357,9 +373,9 @@ document.addEventListener('DOMContentLoaded', function () {
             toggleIcon.src = '/assets/logo/dark-logo-70.png';
             toggleFace.src = `/assets/faces/${actualFaceStatusCodeSrc}.png`;
         }
-
     });
 });
+
 
 
 // async function sendUrlToServer(url) {

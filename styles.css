@@ -2,18 +2,14 @@
 
 :root {
   --primary-color: #ffffff;
-
   --btn-background-color: #3a3ec7;
   --btn-text-color: #ffffff;
-
   --text-color: black;
   --link-color: #ffffff;
-
   --logo-width: 120px;
   --logo-height: auto;
   --logo-margin-right: 10px;
-
-  --border-radius: 10px;
+  --border-radius: 24px;
   --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -37,7 +33,6 @@ body.dark-mode {
   height: 0;
 }
 
-/* Estilo del slider */
 .slider {
   position: absolute;
   cursor: pointer;
@@ -45,7 +40,7 @@ body.dark-mode {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #ccc;
+  background-color: var(--primary-color);
   transition: 0.4s;
   border-radius: 24px;
 }
@@ -57,7 +52,7 @@ body.dark-mode {
   width: 16px;
   left: 4px;
   bottom: 4px;
-  background-color: var(--color-primary);
+  background-color: white;
   transition: 0.4s;
   border-radius: 50%;
 }
@@ -68,14 +63,19 @@ input:checked + .slider {
 
 input:checked + .slider:before {
   transform: translateX(16px);
+  background-color: #ffc107;
 }
 
-.slider {
-  background-color: #3a3ec7;
+body.dark-mode input:checked + .slider:before {
+  background-color: #ffd700;
 }
 
-.slider:before {
-  background-color: #ccc;
+body.dark-mode .slider {
+  background-color: var(--primary-color);
+}
+
+body.dark-mode .slider:before {
+  background-color: white;
 }
 
 body {

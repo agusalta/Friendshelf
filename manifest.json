@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Friendshelf",
   "version": "2.0",
-  "description": "Your softwaredeals and reviews application",
+  "description": "Your software deals and reviews application",
   "permissions": ["activeTab", "contextMenus", "storage", "scripting"],
   "background": {
     "service_worker": "background.js"
