@@ -56,9 +56,5 @@ export async function getAllProducts(db, col) {
     } catch (error) {
         console.error('Error getting all products:', error);
         throw error;
-    } finally {
-        if (client) {
-            await client.close();
-        }
     }
 }

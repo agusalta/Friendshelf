@@ -125,6 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const logoReviewElement = document.querySelector('#logo');
     const faceElement = document.querySelector('#face');
     const whatIsElement = document.querySelector('#what-is');
+    const results = document.querySelector('#results');
 
     chrome.storage.local.get("highlightedText", async (result) => {
         if (chrome.runtime.lastError) {
@@ -146,6 +147,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     const result = await response.json();
 
                     if (result) {
+                        results.style.display = 'block';
+
+                        setTimeout(() => {
+                            results.style.opacity = 1;
+                        }, 100);
+
                         faceElement.src = setFaceImage(result.rating);
                         logoReviewElement.src = result.product_logo;
                         numReviewsElement.textContent = result.rating;
@@ -339,7 +346,16 @@ document.addEventListener('DOMContentLoaded', function () {
         seeReviewsBtn.addEventListener('click', function () {
             fetch(chrome.runtime.getURL('reviews.html'))
                 .then(response => response.text())
-                .then(data => document.getElementById('results').innerHTML = data)
+                .then(data => {
+                    document.getElementById('results').innerHTML = data;
+
+                    const productReviews = document.querySelector('#product-reviews');
+                    productReviews.style.display = 'block';
+
+                    setTimeout(() => {
+                        productReviews.style.opacity = 1;
+                    }, 1000);
+                })
                 .catch(error => console.error('Error fetching reviews.html:', error));
         });
     } else {
@@ -351,21 +367,17 @@ document.addEventListener('DOMContentLoaded', function () {
     let switchBtn = document.querySelector('#toggle-mode');
     const body = document.body;
 
-    // Preferencia de color del sistema
     const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
-    // Aplicar el modo oscuro si el sistema lo prefiere
     if (prefersDarkMode) {
         body.classList.add('dark-mode');
     }
 
-    // Listener para cambiar entre modos
     switchBtn.addEventListener('click', function () {
         let toggleIcon = document.querySelector('#extension-icon');
         let toggleFace = document.querySelector('#face');
         let isDarkMode = body.classList.toggle("dark-mode");
 
-        // Cambiar los íconos y rostros según el modo
         if (isDarkMode) {
             toggleIcon.src = '/assets/logo/light-logo-70.png';
             toggleFace.src = `/assets/faces/${actualFaceStatusCodeSrc}w.png`;
@@ -376,24 +388,3 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-
-
-// async function sendUrlToServer(url) {
-//     try {
-//         const response = await fetch('http://localhost:3000/url/guardar-url', {
-//             method: 'POST',
-//             headers: {
-//                 'Content-Type': 'application/json'
-//             },
-//             body: JSON.stringify({ url })
-//         });
-
-//         if (response.ok) {
-//             console.log('URL successfully sent to server.');
-//         } else {
-//             console.error('Error sending URL to server:', response.statusText);
-//         }
-//     } catch (error) {
-//         console.error('Error sending URL to server:', error);
-//     }
-// }

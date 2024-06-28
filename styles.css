@@ -224,7 +224,10 @@ nav ul li a {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 10px;
+  display: none;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.8s ease-in-out;
 }
 
 #product_deals {
@@ -314,7 +317,6 @@ nav ul li a {
   width: 90px;
   height: 90px;
   border-radius: 25px;
-  object-fit: cover;
 }
 
 #face {
@@ -322,7 +324,6 @@ nav ul li a {
   height: 50px;
   padding: 10px;
   border-radius: 50%;
-  object-fit: cover;
 }
 
 input[type="range"] {
@@ -372,6 +373,10 @@ label {
   max-width: 800px;
   padding: 10px;
   background-color: var(--background-color);
+  display: none;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.8s ease-in-out;
 }
 
 #best-review,

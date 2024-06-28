@@ -79,22 +79,16 @@ app.get('/api/products', async (req, res) => {
     }
 });
 
-// Ruta POST para guardar la URL
-// app.post('/url/guardar-url', (req, res) => {
-//     try {
-//         const { url } = req.body;
-
-//         if (url) {
-//             urlGuardada = url;
-//             console.log('URL successfully saved:', urlGuardada);
-//         }
-
-//     } catch (err) {
-//         res.status(400).send('URL not received');
-//         throw err;
-//     }
-
-// });
+app.get('/api/products/title', async (req, res) => {
+    try {
+        const products = await getAllProducts('extension_reviews', 'products');
+        const productNames = products.map((product) => product.product_name);
+        res.json(productNames);
+    } catch (error) {
+        console.error('Error fetching products:', error);
+        res.status(500).send('Error fetching products');
+    }
+});
 
 app.post('/texto/guardar-texto', (req, res) => {
     try {
@@ -129,13 +123,12 @@ app.post('/review/buscar-query', async (req, res) => {
     }
 });
 
-// Ruta GET para obtener la última URL guardada
 app.get('/ultima-url', (req, res) => {
     if (urlGuardada.length > 0) {
         lastUrl = urlGuardada;
-        res.status(200).json({ url: urlGuardada }); // Enviar la última URL como respuesta JSON
+        res.status(200).json({ url: urlGuardada });
     } else {
-        res.status(404).send('No URL saved'); // Enviar error si no hay URL guardada
+        res.status(404).send('No URL saved');
     }
 });
 
