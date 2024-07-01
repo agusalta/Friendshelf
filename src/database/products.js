@@ -72,7 +72,7 @@ export async function getAllProducts(db, col) {
         const database = client.db(db);
         const collection = database.collection(col);
 
-        const products = await collection.find().limit(50).toArray();
+        const products = await collection.find().toArray();
         return products;
     } catch (error) {
         console.error('Error fetching products:', error);

@@ -3,6 +3,7 @@ import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import productsRouter from './src/routes/products.js';
 import dealsRouter from './src/routes/deals.js';
+import { apiKeyAuth, generateExtensionToken } from './src/middleware/apiKeyAuth.js';
 
 dotenv.config();
 
@@ -20,6 +21,16 @@ app.use((req, res, next) => {
 
 app.use('/products', productsRouter);
 app.use('/deals', dealsRouter);
+
+app.get('/api-key', (req, res) => {
+    const token = generateExtensionToken();
+
+    if (token) {
+        res.json({ token });
+    } else {
+        res.status(500).json({ error: 'Failed to generate token' });
+    }
+});
 
 app.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);

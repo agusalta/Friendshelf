@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Friendshelf",
-  "version": "2.0",
+  "version": "1.0",
   "description": "Your software deals and reviews application",
   "permissions": ["activeTab", "contextMenus", "storage", "scripting"],
   "background": {
@@ -14,7 +14,8 @@
   "content_scripts": [
     {
       "matches": ["https://www.google.com/*"],
-      "js": ["content.js"]
+      "js": ["content.js"],
+      "css": ["content.css"]
     }
   ],
   "icons": {
