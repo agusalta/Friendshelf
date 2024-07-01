@@ -55,5 +55,3 @@ export async function insertProperties(db, col, deals) {
         throw error;
     }
 }
-
-// insertProperties("extension_reviews", "deals", deals).catch(error => console.error('Error inserting properties:', error));

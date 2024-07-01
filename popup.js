@@ -8,6 +8,7 @@ const DOMModule = (() => {
             const currentUrlElement = document.querySelector("#current-url");
 
             updateExtensionIcon();
+
             if (currentUrlElement) {
                 currentUrlElement.textContent = tab.url;
             }
@@ -120,13 +121,14 @@ const ReviewModule = (() => {
     };
 })();
 
-const BASE_URL = 'http://localhost:3000';
+const PRODUCT_URL = 'http://localhost:3000/products';
+const DEALS_URL = 'http://localhost:3000/deals';
 
 // Módulo para manejar la comunicación con el servidor y la lógica de la aplicación
 const ServerModule = (() => {
     async function getProductDeals(title) {
         try {
-            const response = await fetch(`${BASE_URL}/api/title`, {
+            const response = await fetch(`${DEALS_URL}/api/title`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -184,7 +186,7 @@ const App = (() => {
             textElement.textContent = highlightedText || "No se seleccionó nada";
 
             if (highlightedText.length > 0) {
-                const response = await fetch(`${BASE_URL}/api/g2`, {
+                const response = await fetch(`${PRODUCT_URL}/g2`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -274,11 +276,12 @@ const App = (() => {
     document.addEventListener('DOMContentLoaded', () => {
         const seeReviewsBtn = document.getElementById('see-reviews-btn');
 
+        // Traer las reseñas del query buscado
         seeReviewsBtn.addEventListener('click', async () => {
             try {
                 const highlightedText = await ServerModule.getHighlightedText();
 
-                const response = await fetch(`${BASE_URL}/api/g2`, {
+                const response = await fetch(`${PRODUCT_URL}/g2`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -354,6 +357,40 @@ const App = (() => {
                 console.error('Error fetching reviews:', error);
             }
         });
+    });
+
+    // Llevar a la vista de las reseñas
+    document.addEventListener('DOMContentLoaded', function () {
+        var seeReviewsBtn = document.getElementById('see-reviews-btn');
+
+        if (seeReviewsBtn) {
+            seeReviewsBtn.addEventListener('click', function () {
+                fetch(chrome.runtime.getURL('reviews.html'))
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Failed to fetch reviews.html');
+                        }
+                        return response.text();
+                    })
+                    .then(data => {
+                        document.getElementById('results').innerHTML = data;
+
+                        const productReviews = document.querySelector('#product-reviews');
+                        if (productReviews) {
+                            productReviews.style.display = 'block';
+
+                            setTimeout(() => {
+                                productReviews.style.opacity = 1;
+                            }, 1000);
+                        } else {
+                            console.error('Element #product-reviews not found in reviews.html');
+                        }
+                    })
+                    .catch(error => console.error('Error fetching reviews.html:', error));
+            });
+        } else {
+            console.error('see-reviews-btn element not found');
+        }
     });
 
     return {};

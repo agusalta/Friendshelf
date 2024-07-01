@@ -43,7 +43,6 @@ export async function checkIfProductExists(db, col, productName) {
     }
 }
 
-
 export async function updateProduct(dbName, collectionName, query, updateData) {
     try {
         const client = await getConnection();
