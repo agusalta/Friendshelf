@@ -32,13 +32,17 @@ export async function checkIfProductExists(db, col, productName) {
         const client = await getConnection();
         const database = client.db(db);
         const collection = database.collection(col);
-        const existingDocument = await collection.findOne({ product_name: productName });
+
+        // Buscar con una expresión regular insensible a mayúsculas y minúsculas
+        const existingDocument = await collection.findOne({ product_name: { $regex: new RegExp(`^${productName}$`, 'i') } });
+
         return existingDocument;
     } catch (error) {
         console.error('Error checking if product exists:', error);
         throw error;
     }
 }
+
 
 export async function updateProduct(dbName, collectionName, query, updateData) {
     try {
@@ -51,7 +55,7 @@ export async function updateProduct(dbName, collectionName, query, updateData) {
         const result = await collection.updateOne(queryValue, updateData);
 
         if (result.modifiedCount > 0) {
-            console.log(`Product updated successfully for query: ${JSON.stringify(query)}`);
+            console.log(`Reviews updated successfully for product: ${JSON.stringify(query)}`);
             return true;
         } else {
             console.log(`No product found for query: ${JSON.stringify(query)}. Nothing updated.`);

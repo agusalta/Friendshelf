@@ -40,6 +40,7 @@ export default async function fetchData(query, retries = 3, backoff = 3000) {
         }
 
         const data = await response.json();
+        
         return data;
     } catch (error) {
         console.error('Error fetching data:', error);

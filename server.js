@@ -29,27 +29,28 @@ app.post('/api/g2', async (req, res) => {
 
     try {
         // Chequear si ya tenemos los datos en la base de datos
-        const existingData = await checkIfProductExists("extension_reviews", "products", query);
+        let existingData = await checkIfProductExists("extension_reviews", "products", query);
 
         if (existingData) {
             // Verificar si el producto existente en la base de datos tiene initial_reviews
-            if (!existingData.initial_reviews) {
+            if (existingData.initial_reviews === undefined || existingData.initial_reviews === null) {
                 // Si no tiene initial_reviews, actualizar con el resultado de la API si lo tiene
                 const result = await fetchData(query);
 
-                if (result.product_id !== null && result.product_id !== undefined) {
-                    if (result.initial_reviews) {
-                        existingData.initial_reviews = result.initial_reviews;
-                        await updateProduct("extension_reviews", "products", query, { $set: { initial_reviews: result.initial_reviews } });
-                    }
+                if (result.product_id !== null && result.product_id !== undefined && result.initial_reviews !== undefined && result.initial_reviews !== null) {
+                    // Actualizar el campo initial_reviews en el documento existente
+                    console.log("- Gasta peticion :(");
+                    await updateProduct("extension_reviews", "products", query, { $set: { initial_reviews: result.initial_reviews } });
+                    // Actualizar existingData con los nuevos initial_reviews
+                    existingData.initial_reviews = result.initial_reviews;
                 }
             }
-
+            
             res.json(existingData);
         } else {
             // Si no tenemos los datos, se hace la solicitud a la API externa
             const result = await fetchData(query);
-
+            console.log("- Gasta peticion :(");
             if (result.product_id !== null && result.product_id !== undefined) {
                 await insertProperties("extension_reviews", "products", result);
                 res.json(result);
@@ -63,6 +64,7 @@ app.post('/api/g2', async (req, res) => {
         res.status(500).json({ error: 'Failed to process request' });
     }
 });
+
 
 app.post('/api/title', async (req, res) => {
     const { title } = req.body;
