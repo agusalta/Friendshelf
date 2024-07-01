@@ -2,6 +2,7 @@
 
 :root {
   --primary-color: #ffffff;
+  --secondary-color: #ffd700;
   --btn-background-color: #3a3ec7;
   --btn-text-color: #ffffff;
   --text-color: black;
@@ -63,11 +64,11 @@ input:checked + .slider {
 
 input:checked + .slider:before {
   transform: translateX(16px);
-  background-color: #ffc107;
+  background-color: var(--secondary-color);
 }
 
 body.dark-mode input:checked + .slider:before {
-  background-color: #ffd700;
+  background-color: var(--secondary-color);
 }
 
 body.dark-mode .slider {
@@ -129,6 +130,12 @@ nav ul li {
 nav ul li a {
   text-decoration: none;
   color: var(--text-color);
+  transition: opacity 2s ease-in-out;
+}
+
+nav ul li a:hover {
+  color: var(--secondary-color);
+  opacity: 0.8;
 }
 
 #extension-icon {
@@ -230,55 +237,52 @@ nav ul li a {
   transition: opacity 0.8s ease-in-out;
 }
 
-#product_deals {
-  padding: 10px;
-  margin: 25px;
-  background-color: var(--primary-color);
-}
-
-#product_deals_title {
-  font-size: 20px;
-  font-weight: 600;
-  color: var(--text-color);
-  margin-bottom: 15px;
-  border-bottom: 2px solid var(--primary-color);
-  padding-bottom: 10px;
-}
-
-#product_deals_discount,
-#product_deals_claim_details,
-#product_deals_offer_details {
-  font-size: 15px;
-  color: var(--text-color);
-  margin: 10px 0;
-}
-
-#product_pricing_plans {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  text-transform: uppercase;
+.card-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 5px;
+  padding: 15px;
 }
 
 #product_pricing_plans .plan {
-  padding: 10px;
-  background-color: #f9f9f9;
-  border: 1px solid #ddd;
-  border-radius: 5px;
+  padding: 15px;
+  background-color: var(--color-primary);
+  border-radius: 8px;
   box-shadow: var(--box-shadow);
   transition: transform 0.2s;
 }
 
 #product_pricing_plans .plan h3 {
   font-size: 18px;
+  font-weight: bold;
   color: var(--text-color);
-  margin: 5px 0;
+  margin-bottom: 10px;
 }
 
 #product_pricing_plans .plan p {
   font-size: 14px;
   color: var(--text-color);
-  margin: 5px 0;
+  margin-bottom: 5px;
+}
+
+#product_pricing_plans .plan .features {
+  margin-top: 5px;
+  padding-left: 20px;
+}
+
+#product_deals_title {
+  padding-left: 20px;
+  text-align: left;
+  font-size: 18px;
+  font-weight: bold;
+  color: var(--text-color);
+  margin-bottom: 10px;
+}
+
+#product_deals_offer_details {
+  font-size: 15px;
+  padding-left: 20px;
+  text-align: left;
 }
 
 #product-data {
@@ -286,7 +290,7 @@ nav ul li a {
   flex-direction: row;
   align-items: center;
   justify-content: space-evenly;
-  padding: 15px;
+  padding: 20px;
   border-radius: 25px;
   width: 100%;
 }

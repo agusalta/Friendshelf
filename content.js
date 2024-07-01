@@ -1,4 +1,3 @@
-alert("content.js loaded");
 
 // async function fetchProductNames() {
 //     try {

@@ -3,7 +3,7 @@ import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import searchGoogleReviews from './data/google-reviews.js'
 import fetchData from './data/g2.js';
-import { insertProperties, checkIfProductExists, getAllProducts } from "./mongoDB/products.js";
+import { insertProperties, checkIfProductExists, getAllProducts, getProductByTitle, updateProduct } from "./mongoDB/products.js";
 import { getDeal } from './mongoDB/deals.js';
 
 dotenv.config();
@@ -32,7 +32,19 @@ app.post('/api/g2', async (req, res) => {
         const existingData = await checkIfProductExists("extension_reviews", "products", query);
 
         if (existingData) {
-            console.log(`Data for query "${query}" already exists in the database.`);
+            // Verificar si el producto existente en la base de datos tiene initial_reviews
+            if (!existingData.initial_reviews) {
+                // Si no tiene initial_reviews, actualizar con el resultado de la API si lo tiene
+                const result = await fetchData(query);
+
+                if (result.product_id !== null && result.product_id !== undefined) {
+                    if (result.initial_reviews) {
+                        existingData.initial_reviews = result.initial_reviews;
+                        await updateProduct("extension_reviews", "products", query, { $set: { initial_reviews: result.initial_reviews } });
+                    }
+                }
+            }
+
             res.json(existingData);
         } else {
             // Si no tenemos los datos, se hace la solicitud a la API externa
@@ -89,6 +101,17 @@ app.get('/api/products/title', async (req, res) => {
         res.status(500).send('Error fetching products');
     }
 });
+
+app.get('/api/products/:name', async (req, res) => {
+    try {
+        const { name } = req.params;
+        const product = await getProductByTitle(name);
+        res.json(product);
+    } catch (error) {
+        console.error('Error fetching product:', error);
+        res.status(500).send('Error fetching product');
+    }
+})
 
 app.post('/texto/guardar-texto', (req, res) => {
     try {

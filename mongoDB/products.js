@@ -1,8 +1,5 @@
 import getConnection from "./connection.js";
 
-// const dbName = "extension_reviews";
-// const collectionName = "products";
-
 export async function insertProperties(db, col, jsonData) {
     try {
         const client = await getConnection();
@@ -43,18 +40,93 @@ export async function checkIfProductExists(db, col, productName) {
     }
 }
 
-export async function getAllProducts(db, col) {
-    let client;
-
+export async function updateProduct(dbName, collectionName, query, updateData) {
     try {
-        client = await getConnection();
+        const client = await getConnection();
+        const database = client.db(dbName);
+        const collection = database.collection(collectionName);
+
+        const queryValue = { product_name: query };
+
+        const result = await collection.updateOne(queryValue, updateData);
+
+        if (result.modifiedCount > 0) {
+            console.log(`Product updated successfully for query: ${JSON.stringify(query)}`);
+            return true;
+        } else {
+            console.log(`No product found for query: ${JSON.stringify(query)}. Nothing updated.`);
+            return false;
+        }
+    } catch (error) {
+        console.error('Error updating product:', error);
+        throw error;
+    }
+}
+
+export async function getAllProducts(db, col) {
+    try {
+        const client = await getConnection();
         const database = client.db(db);
         const collection = database.collection(col);
-        const products = await collection.find({}).toArray();
+
+        const products = await collection.find().limit(50).toArray();
         return products;
+    } catch (error) {
+        console.error('Error fetching products:', error);
+        throw error;
+    }
+}
+
+export async function getProductByTitle(title) {
+    try {
+        const client = await getConnection();
+        const database = client.db("extension_reviews");
+        const collection = database.collection("products");
+        const title_cap = title.charAt(0).toUpperCase() + title.slice(1);
+        const product = await collection.findOne({ product_name: title_cap });
+
+        if (product) {
+            return product;
+        } else {
+            throw new Error(`No product found with title: ${title}`);
+        }
 
     } catch (error) {
-        console.error('Error getting all products:', error);
+        console.error('Error fetching product:', error);
+        throw error;
+    }
+}
+
+export async function updateInitialReviews() {
+    try {
+        const client = await getConnection();
+        const database = client.db("extension_reviews");
+        const collection = database.collection("products");
+
+        const productsWithStrings = await collection.find({ initial_reviews: { $type: "string" } }).toArray();
+
+        for (const product of productsWithStrings) {
+            try {
+                if (typeof product.initial_reviews === "string") {
+                    const initialReviewsArray = JSON.parse(product.initial_reviews);
+
+                    await collection.updateOne(
+                        { _id: product._id },
+                        { $set: { initial_reviews: initialReviewsArray } }
+                    );
+
+                    console.log(`Updated initial_reviews for product with _id: ${product._id}`);
+                }
+            } catch (error) {
+                console.error(`Error updating initial_reviews for product with _id ${product._id}:`, error);
+                continue;
+            }
+        }
+
+        console.log("Initial reviews update completed.");
+        return true;
+    } catch (error) {
+        console.error('Error updating initial reviews:', error);
         throw error;
     }
 }

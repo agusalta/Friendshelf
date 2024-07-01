@@ -157,7 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         logoReviewElement.src = result.product_logo;
                         numReviewsElement.textContent = result.rating;
                         setReviewRatingElement(result.rating, "#reviews");
-                        reviewerNotesElement.textContent = `${result.reviews || 'No se encontraron'} reviews`;
+                        reviewerNotesElement.textContent = `${result.reviews || "We couldn't find"} reviews`;
                         whatIsElement.textContent = `${result.what_is || ''}`;
 
                         // Ofertas
@@ -165,7 +165,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         const prodDealsDiscount = document.querySelector('#product_deals_discount');
                         const prodDealsClaimOfferDetails = document.querySelector('#product_deals_claim_details');
                         const prodDealsOfferDetails = document.querySelector('#product_deals_offer_details');
-
 
                         if (result.product_name) {
                             const deal = await getProductDeals(result.product_name);
@@ -177,20 +176,26 @@ document.addEventListener('DOMContentLoaded', () => {
                                 prodDealsOfferDetails.textContent = deal.prod_offer_details || '';
 
                                 if (result.pricing_plans !== null && result.pricing_plans.length > 0) {
-                                    for (let i = 0; i < result.pricing_plans.length; i++) {
-                                        const prodDealsPricingPlans = document.querySelector('#product_pricing_plans');
-                                        const pricingPlan = document.createElement('div');
-                                        const planName = document.createElement('p')
-                                        const planPrice = document.createElement('p')
-                                        const planDesc = document.createElement('p')
-                                        const planFeatures = document.createElement('ul')
-                                        const planFeature = document.createElement('li')
+                                    const prodDealsPricingPlans = document.querySelector('#product_pricing_plans');
 
+                                    for (let i = 0; i < result.pricing_plans.length; i++) {
+                                        const pricingPlan = document.createElement('div');
+                                        pricingPlan.classList.add('plan');
+
+                                        const planName = document.createElement('h3');
                                         planName.textContent = result.pricing_plans[i].plan_name;
+
+                                        const planPrice = document.createElement('p');
                                         planPrice.textContent = result.pricing_plans[i].plan_price;
+
+                                        const planDesc = document.createElement('p');
                                         planDesc.textContent = result.pricing_plans[i].plan_desc;
 
+                                        const planFeatures = document.createElement('ul');
+                                        planFeatures.classList.add('features');
+
                                         for (let j = 0; j < result.pricing_plans[i].plan_features.length; j++) {
+                                            const planFeature = document.createElement('li');
                                             planFeature.textContent = result.pricing_plans[i].plan_features[j];
                                             planFeatures.appendChild(planFeature);
                                         }
@@ -199,11 +204,13 @@ document.addEventListener('DOMContentLoaded', () => {
                                         pricingPlan.appendChild(planPrice);
                                         pricingPlan.appendChild(planDesc);
                                         pricingPlan.appendChild(planFeatures);
+
                                         prodDealsPricingPlans.appendChild(pricingPlan);
                                     }
                                 }
                             }
                         }
+
 
                         if (result.product_logo && result.product_logo.trim() !== "") {
                             const logoReviewElement = document.querySelector('#logo');
@@ -233,24 +240,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
-
-// document.addEventListener('DOMContentLoaded', function () {
-//     var goBackButton = document.querySelector('#go-back-btn');
-
-//     if (goBackButton) {
-//         goBackButton.addEventListener('click', function () {
-//             fetch(chrome.runtime.getURL('popup.html'))
-//                 .then(response => response.text())
-//                 .then(data => document.getElementById('results').innerHTML = data)
-//                 .catch(error => console.error('Error fetching popup.html:', error));
-//         });
-//     } else {
-//         console.error('go-back-btn element not found');
-//     }
-// });
-
 document.addEventListener('DOMContentLoaded', function () {
-    var seeReviewsBtn = document.getElementById('see-reviews-btn');
+    let seeReviewsBtn = document.getElementById('see-reviews-btn');
+
     seeReviewsBtn.addEventListener('click', async function () {
         try {
             const highlightedText = await getHighlightedText();
@@ -262,22 +254,34 @@ document.addEventListener('DOMContentLoaded', function () {
                 },
                 body: JSON.stringify({ query: highlightedText })
             });
-            const result = await response.json();
 
             const bestReviewElement = document.querySelector('#best-review');
             const worstReviewElement = document.querySelector('#worst-review');
 
-            if (result.initial_reviews && result.initial_reviews.length) {
+            const result = await response.json();
+            let reviews = result.initial_reviews;
+
+            if (typeof reviews === 'string') {
+                try {
+                    reviews = JSON.parse(reviews);
+                } catch (e) {
+                    console.error('Error parsing initial_reviews JSON string:', e);
+                    reviews = [];
+                }
+            }
+
+            if (reviews && reviews.length) {
                 let best = {}, worst = {};
                 let min = Infinity, max = -Infinity;
 
-                for (let i = 0; i < result.initial_reviews.length; i++) {
-                    if (result.initial_reviews[i].review_rating > max) {
-                        max = result.initial_reviews[i].review_rating;
-                        best = result.initial_reviews[i];
-                    } else if (result.initial_reviews[i].review_rating < min) {
-                        min = result.initial_reviews[i].review_rating;
-                        worst = result.initial_reviews[i];
+                for (let i = 0; i < reviews.length; i++) {
+                    if (reviews[i].review_rating > max) {
+                        max = reviews[i].review_rating;
+                        best = reviews[i];
+                    }
+                    if (reviews[i].review_rating < min) {
+                        min = reviews[i].review_rating;
+                        worst = reviews[i];
                     }
                 }
 
