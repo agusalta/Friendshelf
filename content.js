@@ -49,14 +49,32 @@ async function getProductNamesFromStorage() {
 // Función para guardar los nombres de productos encontrados en el almacenamiento local
 function saveFoundProductNamesToLocalStorage(foundProductNames) {
     chrome.storage.local.get({ foundProductNames: [] }, (result) => {
-        const existingFoundNames = new Set(result.foundProductNames);
-        foundProductNames.forEach(name => existingFoundNames.add(name));
-        const updatedFoundNames = Array.from(existingFoundNames);
-        chrome.storage.local.set({ foundProductNames: updatedFoundNames }, () => {
-            console.log('Updated foundProductNames:', updatedFoundNames);
+        let existingFoundNames = result.foundProductNames || []; // Cargar el array existente
+        foundProductNames.forEach(name => {
+            if (!existingFoundNames.includes(name)) {
+                existingFoundNames.push(name); // Agregar solo si no existe ya en el array
+            }
+        });
+
+        chrome.storage.local.set({ foundProductNames: existingFoundNames }, () => {
+            console.log('Updated foundProductNames:', existingFoundNames);
         });
     });
 }
+
+
+function saveHighlightedTextToStorage(productName) {
+    chrome.storage.local.set({ 'highlightedText': productName }, () => {
+        console.log('Updated highlightedText:', productName);
+    });
+}
+
+
+// Función para guardar el texto resaltado en el almacenamiento local al hacer hover
+function saveHighlightedTextOnHover(productName) {
+    saveHighlightedTextToStorage(productName);
+}
+
 
 // Función para resaltar nombres de productos en la página
 function highlightProductNames(productNamesArray) {
@@ -76,12 +94,16 @@ function highlightProductNames(productNamesArray) {
                 const productName = span.textContent.trim();
 
                 if (productNamesSet.has(productName)) {
-                    span.style.color = '#3a3ec7';
-                    span.style.fontWeight = 'bold';
+                    if (!span.classList.contains('highlighted')) {
+                        span.classList.add('highlighted');
+                    }
+                    span.addEventListener('mouseenter', () => {
+                        saveHighlightedTextToStorage(productName);
+                    });
+                    
                     foundProductNames.push(productName);
                 }
 
-                // Una vez procesado, dejamos de observar este span
                 observer.unobserve(span);
             }
         });

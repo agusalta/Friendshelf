@@ -1,5 +1,26 @@
 .highlighted {
-  background-color: yellow;
-  color: black;
+  color: #3a3ec7 !important;
   font-weight: bold;
+  cursor: pointer;
+}
+
+.highlighted:hover {
+  text-decoration: line-through;
+}
+
+.save-button {
+  background-color: #3a3ec7;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  position: absolute;
+  top: 0; /* Ajusta la posición según sea necesario */
+  right: -30px; /* Coloca el botón a la derecha del span */
+  transition: background-color 0.3s ease;
+}
+
+.save-button:hover {
+  background-color: #5559cc;
 }
