@@ -32,13 +32,17 @@ function getFoundProductNames(callback) {
     });
 }
 
-// Función para actualizar el badge del icono de la extensión
-function updateBadge() {
+// Función para actualizar el badge del icono de la extensión y el title
+function updateBadgeAndTitle() {
     getFoundProductNames((foundProductNames) => {
         const count = foundProductNames.length;
+        const title = foundProductNames.join(', ') || 'No products found';
         console.log('Updating badge with count:', count);
+        console.log('Updating title with:', title);
+
         chrome.action.setBadgeText({ text: count.toString() });
         chrome.action.setBadgeBackgroundColor({ color: '#3a3ec7' });
+        chrome.action.setTitle({ title });
     });
 }
 
@@ -46,10 +50,10 @@ function updateBadge() {
 chrome.storage.onChanged.addListener((changes, namespace) => {
     if (changes.foundProductNames) {
         console.log('foundProductNames changed:', changes.foundProductNames.newValue);
-        updateBadge();
+        updateBadgeAndTitle();
     }
 });
 
-// Actualizar el badge al iniciar
-chrome.runtime.onStartup.addListener(updateBadge);
-chrome.runtime.onInstalled.addListener(updateBadge);
+// Actualizar el badge y el title al iniciar
+chrome.runtime.onStartup.addListener(updateBadgeAndTitle);
+chrome.runtime.onInstalled.addListener(updateBadgeAndTitle);

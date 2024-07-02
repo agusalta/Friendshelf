@@ -3,7 +3,13 @@
   "name": "Friendshelf",
   "version": "1.0",
   "description": "Your software deals and reviews application",
-  "permissions": ["activeTab", "contextMenus", "storage", "scripting"],
+  "permissions": [
+    "activeTab",
+    "contextMenus",
+    "storage",
+    "scripting",
+    "action"
+  ],
   "background": {
     "service_worker": "background.js"
   },

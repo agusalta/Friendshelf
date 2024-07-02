@@ -102,6 +102,17 @@ function highlightProductNames(productNamesArray) {
 // Función principal para obtener y resaltar nombres de productos
 async function fetchAndHighlightProductNames() {
     try {
+        // Vaciar el array de productos encontrados
+        await new Promise((resolve, reject) => {
+            chrome.storage.local.set({ 'foundProductNames': [] }, () => {
+                if (chrome.runtime.lastError) {
+                    reject(chrome.runtime.lastError);
+                } else {
+                    resolve();
+                }
+            });
+        });
+
         let productNames = await getProductNamesFromStorage();
 
         if (productNames.length === 0) {
