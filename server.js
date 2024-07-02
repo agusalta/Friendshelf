@@ -3,7 +3,7 @@ import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import productsRouter from './src/routes/products.js';
 import dealsRouter from './src/routes/deals.js';
-import { apiKeyAuth, generateExtensionToken } from './src/middleware/apiKeyAuth.js';
+import { generateExtensionToken } from './src/middleware/apiKeyAuth.js';
 
 dotenv.config();
 

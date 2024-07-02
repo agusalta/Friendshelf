@@ -4,12 +4,13 @@ const logoURL = './assets/logo/light-logo-70.png';
 async function fetchProductNamesFromAPI() {
     try {
         const response = await fetch('http://localhost:3000/products/title');
+
         if (!response.ok) {
             throw new Error('Error al obtener nombres de productos: ' + response.status);
         }
         const contentType = response.headers.get('content-type');
         if (!contentType || !contentType.includes('application/json')) {
-            throw new Error('La respuesta no es JSON válido');
+            throw new Error('La respuesta no es JSON');
         }
         const productNames = await response.json();
         return Array.isArray(productNames) ? productNames : [];
@@ -45,10 +46,23 @@ async function getProductNamesFromStorage() {
     });
 }
 
+// Función para guardar los nombres de productos encontrados en el almacenamiento local
+function saveFoundProductNamesToLocalStorage(foundProductNames) {
+    chrome.storage.local.get({ foundProductNames: [] }, (result) => {
+        const existingFoundNames = new Set(result.foundProductNames);
+        foundProductNames.forEach(name => existingFoundNames.add(name));
+        const updatedFoundNames = Array.from(existingFoundNames);
+        chrome.storage.local.set({ foundProductNames: updatedFoundNames }, () => {
+            console.log('Updated foundProductNames:', updatedFoundNames);
+        });
+    });
+}
+
 // Función para resaltar nombres de productos en la página
-function highlightProductNames(productNamesArray, logoURL) {
+function highlightProductNames(productNamesArray) {
     const productNamesSet = new Set(productNamesArray);
-    
+    const foundProductNames = [];
+
     const observerOptions = {
         root: null,
         rootMargin: '0px',
@@ -64,12 +78,17 @@ function highlightProductNames(productNamesArray, logoURL) {
                 if (productNamesSet.has(productName)) {
                     span.style.color = '#3a3ec7';
                     span.style.fontWeight = 'bold';
+                    foundProductNames.push(productName);
                 }
 
                 // Una vez procesado, dejamos de observar este span
                 observer.unobserve(span);
             }
         });
+
+        if (foundProductNames.length > 0) {
+            saveFoundProductNamesToLocalStorage(foundProductNames);
+        }
     };
 
     const observer = new IntersectionObserver(observerCallback, observerOptions);

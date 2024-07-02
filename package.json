@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "type": "module",
   "description": "",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
     "start": "node ./server.js",
-    "start-dev": "nodemon ./server.js"
+    "start-dev": "nodemon ./server.js",
+    "electron": "electron ."
   },
   "keywords": [],
   "author": "",
@@ -19,5 +20,9 @@
     "mongodb": "^6.7.0",
     "playwright": "^1.44.1",
     "serpapi": "^2.1.0"
+  },
+  "devDependencies": {
+    "electron": "^31.1.0",
+    "electron-packager": "^17.1.2"
   }
 }
