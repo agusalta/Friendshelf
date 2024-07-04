@@ -1,7 +1,10 @@
 import express from 'express';
+import cors from 'cors';
 import { getDeal } from '../database/deals.js';
 
 const router = express.Router();
+
+router.use(cors());
 
 // POST A DEAL
 router.post('/title', async (req, res, next) => {

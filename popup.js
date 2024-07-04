@@ -3,57 +3,8 @@ const DOMModule = (() => {
     let actualFaceStatusCodeSrc;
 
     document.addEventListener('DOMContentLoaded', async () => {
-        try {
-            const tab = await getCurrentTab();
-            const currentUrlElement = document.querySelector("#current-url");
-
-            updateExtensionIcon();
-
-            if (currentUrlElement) {
-                currentUrlElement.textContent = tab.url;
-            }
-
-            await sendUrlToServer(tab.url);
-
-            actualFaceStatusCodeSrc = 0;
-
-        } catch (error) {
-            console.error('Error retrieving active tab:', error);
-        }
+        actualFaceStatusCodeSrc = 0;
     });
-
-    function getCurrentTab() {
-        return new Promise((resolve, reject) => {
-            chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-                if (chrome.runtime.lastError) {
-                    reject(chrome.runtime.lastError.message);
-                } else {
-                    resolve(tabs[0]);
-                }
-            });
-        });
-    }
-
-    async function sendUrlToServer(url) {
-        try {
-            const response = await fetch('http://localhost:3000/url', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ url })
-            });
-
-            if (response.ok) {
-                console.log('URL successfully sent to server.');
-            } else {
-                console.error('Error sending URL to server:', response.status, response.statusText);
-            }
-        } catch (error) {
-            console.error('Error sending URL to server:', error);
-        }
-    }
-
 
     function updateExtensionIcon() {
         const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;

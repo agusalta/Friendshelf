@@ -32,7 +32,6 @@ app.get('/api-key', (req, res) => {
     }
 });
 
-// Ruta POST para guardar la URL
 let URL = '';
 
 app.post('/url', (req, res) => {

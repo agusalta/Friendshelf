@@ -7,10 +7,40 @@ chrome.runtime.onInstalled.addListener(() => {
 
 });
 
+function sendCurrentTabUrlToServer() {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        if (tabs.length > 0) {
+            const currentTab = tabs[0];
+            const url = currentTab.url;
+
+            // Enviar la URL al servidor
+            fetch('http://localhost:3000/url', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ url })
+            })
+                .then(response => {
+                    if (response.ok) {
+                        console.log('URL successfully sent to server.');
+                    } else {
+                        console.error('Error sending URL to server:', response.statusText);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error sending URL to server:', error);
+                });
+        } else {
+            console.error('No active tab found.');
+        }
+    });
+}
+
 // Función para aplicar el modo oscuro cuando se cambia de página
 chrome.tabs.onActivated.addListener(({ tabId }) => {
     chrome.storage.local.get('darkMode', ({ darkMode }) => {
-        const isDarkModeOn = darkMode || false; 
+        const isDarkModeOn = darkMode || false;
         chrome.scripting.executeScript({
             target: { tabId },
             func: () => {
@@ -19,6 +49,8 @@ chrome.tabs.onActivated.addListener(({ tabId }) => {
             },
         });
     });
+
+    sendCurrentTabUrlToServer();
 });
 
 // Manejo de clic en menú contextual
