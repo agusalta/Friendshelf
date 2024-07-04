@@ -5,25 +5,12 @@ chrome.runtime.onInstalled.addListener(() => {
         contexts: ["selection"]
     });
 
-    const welcomePage = 'welcome.html';
-    chrome.sidePanel.setOptions({ path: welcomePage });
-    chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true });
-
-    updateBadgeAndTitle();
-});
-
-// Listener para cambiar de página de bienvenida a página principal
-chrome.tabs.onActivated.addListener(async ({ tabId }) => {
-    const { path } = await chrome.sidePanel.getOptions({ tabId });
-    if (path === 'welcome.html') {
-        chrome.sidePanel.setOptions({ path: 'popup.html' });
-    }
 });
 
 // Función para aplicar el modo oscuro cuando se cambia de página
 chrome.tabs.onActivated.addListener(({ tabId }) => {
     chrome.storage.local.get('darkMode', ({ darkMode }) => {
-        const isDarkModeOn = darkMode || false; // Por defecto, el modo oscuro está apagado
+        const isDarkModeOn = darkMode || false; 
         chrome.scripting.executeScript({
             target: { tabId },
             func: () => {

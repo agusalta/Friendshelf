@@ -4,6 +4,7 @@
   "version": "1.0",
   "description": "Your software deals and reviews application",
   "permissions": ["activeTab", "contextMenus", "storage", "scripting", "tabs"],
+  "host_permissions": ["*://*/*"],
   "background": {
     "service_worker": "background.js"
   },

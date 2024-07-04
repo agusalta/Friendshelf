@@ -587,10 +587,12 @@ label {
 
 .welcome-list {
   margin-bottom: 1.5rem;
+  color: var(--text-color);
 }
 
 .welcome-list-item {
   margin-bottom: 0.5rem;
+  list-style: circle;
 }
 
 .welcome-btn {
