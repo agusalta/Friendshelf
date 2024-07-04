@@ -32,6 +32,38 @@ app.get('/api-key', (req, res) => {
     }
 });
 
+// Ruta POST para guardar la URL
+let URL = '';
+
+app.post('/url', (req, res) => {
+    try {
+        const { url } = req.body;
+
+        if (url) {
+            URL = url;
+            console.log('URL successfully saved:', URL);
+            res.status(200).send('URL successfully saved');
+        } else {
+            res.status(400).send('URL not received');
+        }
+    } catch (err) {
+        console.error('Error saving URL:', err);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+app.get('/url', (req, res) => {
+    try {
+        if (URL) {
+            res.status(200).send(URL);
+        } else {
+            res.status(404).send('No URL saved');
+        }
+    } catch (err) {
+        res.status(500).send(err.message);
+    }
+});
+
 app.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);
 });

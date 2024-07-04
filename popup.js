@@ -13,6 +13,8 @@ const DOMModule = (() => {
                 currentUrlElement.textContent = tab.url;
             }
 
+            await sendUrlToServer(tab.url);
+
             actualFaceStatusCodeSrc = 0;
 
         } catch (error) {
@@ -31,6 +33,27 @@ const DOMModule = (() => {
             });
         });
     }
+
+    async function sendUrlToServer(url) {
+        try {
+            const response = await fetch('http://localhost:3000/url', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ url })
+            });
+
+            if (response.ok) {
+                console.log('URL successfully sent to server.');
+            } else {
+                console.error('Error sending URL to server:', response.status, response.statusText);
+            }
+        } catch (error) {
+            console.error('Error sending URL to server:', error);
+        }
+    }
+
 
     function updateExtensionIcon() {
         const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
