@@ -402,20 +402,39 @@ const DarkModeModule = (() => {
         const switchBtn = document.querySelector('#toggle-mode');
         const body = document.body;
 
-        const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        // Función para guardar el estado del modo oscuro en chrome.storage.local
+        const saveDarkModeState = (isDarkModeOn) => {
+            chrome.storage.local.set({ darkMode: isDarkModeOn });
+        };
 
-        if (prefersDarkMode) {
-            body.classList.add('dark-mode');
-        }
+        // Función para cargar y aplicar el estado del modo oscuro desde chrome.storage.local
+        const applyDarkModeState = () => {
+            chrome.storage.local.get('darkMode', (data) => {
+                const isDarkModeOn = data.darkMode || false; // Por defecto, el modo oscuro está apagado
+                body.classList.toggle('dark-mode', isDarkModeOn);
+                switchBtn.checked = isDarkModeOn;
+                updateLogoAndFace(isDarkModeOn); // Actualiza los elementos visuales según el modo oscuro
+            });
+        };
 
-        switchBtn.addEventListener('click', () => {
+        // Aplicar estado del modo oscuro al cargar el popup
+        applyDarkModeState();
+
+        // Cambiar estado del modo oscuro al hacer clic en el botón de alternancia
+        switchBtn.addEventListener('change', () => {
+            const isDarkModeOn = switchBtn.checked;
+            body.classList.toggle('dark-mode', isDarkModeOn);
+            saveDarkModeState(isDarkModeOn);
+            updateLogoAndFace(isDarkModeOn); // Actualiza los elementos visuales según el modo oscuro
+        });
+
+        // Función para actualizar el logo y la cara según el modo oscuro
+        const updateLogoAndFace = (isDarkModeOn) => {
             const toggleIcon = document.querySelector('#extension-icon');
             const toggleFace = document.querySelector('#face');
-            const isDarkMode = body.classList.toggle("dark-mode");
-
-            toggleIcon.src = isDarkMode ? '/assets/logo/light-logo-70.png' : '/assets/logo/dark-logo-70.png';
-            toggleFace.src = `/assets/faces/${DOMModule.actualFaceStatusCodeSrc}${isDarkMode ? 'w' : ''}.png`;
-        });
+            toggleIcon.src = isDarkModeOn ? '/assets/logo/light-logo-70.png' : '/assets/logo/dark-logo-70.png';
+            toggleFace.src = `/assets/faces/${DOMModule.actualFaceStatusCodeSrc}${isDarkModeOn ? 'w' : ''}.png`;
+        };
     });
 
     return {};

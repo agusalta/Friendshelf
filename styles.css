@@ -5,6 +5,8 @@
   --secondary-color: #ffd700;
   --btn-background-color: #3a3ec7;
   --btn-text-color: #ffffff;
+  --slide-bar: #3a3ec7;
+  --slider: #ffd700;
   --text-color: black;
   --link-color: #ffffff;
   --logo-width: 120px;
@@ -17,8 +19,10 @@
 body.dark-mode {
   --primary-color: #3a3ec7;
   --text-color: #ffffff;
+  --slide-bar: #ffffff;
   --btn-background-color: #ffffff;
   --btn-text-color: #3a3ec7;
+  --slider: #ffffff;
 }
 
 .switch {
@@ -41,7 +45,7 @@ body.dark-mode {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: var(--primary-color);
+  background-color: var(--slider);
   transition: 0.4s;
   border-radius: 24px;
 }
@@ -53,7 +57,7 @@ body.dark-mode {
   width: 16px;
   left: 4px;
   bottom: 4px;
-  background-color: white;
+  background-color: #ffffff;
   transition: 0.4s;
   border-radius: 50%;
 }
@@ -436,4 +440,191 @@ label {
 #worst-reviewer_company-size {
   font-size: 14px;
   color: var(--text-color);
+}
+
+// Welcome
+
+.welcome-body {
+  font-family: "Poppins", sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: var(--primary-color);
+  color: var(--text-color);
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.welcome-header {
+  text-align: center;
+  width: 100%;
+}
+
+.welcome-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+}
+
+.welcome-nav-list {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-right: 20px;
+}
+
+.welcome-nav-item {
+  list-style: none;
+  margin: 0 10px;
+}
+
+.welcome-nav-link {
+  text-decoration: none;
+  color: var(--text-color);
+  transition: opacity 0.2s ease-in-out;
+}
+
+.welcome-nav-link:hover {
+  color: var(--secondary-color);
+  opacity: 0.8;
+}
+
+.welcome-nav-icon {
+  height: var(--logo-height);
+  width: var(--logo-width);
+  margin-right: var(--logo-margin-right);
+  vertical-align: middle;
+}
+
+.welcome-switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 24px;
+}
+
+.welcome-switch-input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.welcome-switch-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--primary-color);
+  transition: 0.4s;
+  border-radius: 24px;
+}
+
+.welcome-switch-slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+.welcome-switch-input:checked + .welcome-switch-slider {
+  background-color: white;
+}
+
+.welcome-switch-input:checked + .welcome-switch-slider:before {
+  transform: translateX(16px);
+  background-color: var(--secondary-color);
+}
+
+.welcome-body.dark-mode
+  .welcome-switch-input:checked
+  + .welcome-switch-slider:before {
+  background-color: var(--secondary-color);
+}
+
+.welcome-body.dark-mode .welcome-switch-slider {
+  background-color: var(--primary-color);
+}
+
+.welcome-body.dark-mode .welcome-switch-slider:before {
+  background-color: white;
+}
+
+.welcome-container {
+  flex-direction: column;
+  color: var(--text-color);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  padding: 30px;
+  background-color: var(--primary-color);
+}
+
+.welcome-title {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.welcome-description {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  font-style: italic;
+}
+
+.welcome-subtitle {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.welcome-list {
+  margin-bottom: 1.5rem;
+}
+
+.welcome-list-item {
+  margin-bottom: 0.5rem;
+}
+
+.welcome-btn {
+  background-color: var(--btn-background-color);
+  color: var(--btn-text-color);
+  padding: 0.8rem 1.5rem;
+  border-radius: var(--border-radius);
+  text-decoration: none;
+  display: inline-block;
+  transition: background-color 0.3s ease;
+}
+
+.welcome-btn:hover {
+  background-color: #2c2f99; /* Color hover alternativo */
+}
+
+/* Estilos del scrollbar */
+::-webkit-scrollbar {
+  width: 8px; /* Ancho del scrollbar */
+  transform: transition 1s linear;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--primary-color); /* Usando el color de tu root variable */
+  border-radius: 10px; /* Radio de borde del scrollbar */
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--slide-bar); /* Color del thumb (barra deslizante) */
+  border-radius: 10px; /* Radio de borde del thumb */
+  transition: background-color 0.3s ease, border-radius 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: var(--secondary-color);
+  transform: transition 2 ease-out;
 }
