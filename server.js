@@ -40,7 +40,7 @@ app.post('/url', (req, res) => {
 
         if (url) {
             URL = url;
-            console.log('URL successfully saved:', URL);
+            console.log('- URL successfully saved:', URL);
             res.status(200).send('URL successfully saved');
         } else {
             res.status(400).send('URL not received');
@@ -64,7 +64,8 @@ app.get('/url', (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`Server listening on port ${PORT}`);
+    console.log(`🌟🌟🌟 Friendsheld server listening on port ${PORT} 🚀 `);
 });
+
 
 export default app;
