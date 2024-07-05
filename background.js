@@ -1,3 +1,4 @@
+// Manejo de la extensión apenas se instala
 chrome.runtime.onInstalled.addListener(() => {
     chrome.contextMenus.create({
         id: "review",
@@ -7,6 +8,7 @@ chrome.runtime.onInstalled.addListener(() => {
 
 });
 
+// Función para enviar la URL actual del tab activo al servidor
 function sendCurrentTabUrlToServer() {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         if (tabs.length > 0) {
@@ -37,6 +39,43 @@ function sendCurrentTabUrlToServer() {
     });
 }
 
+// Función para extraer el nombre del producto a partir de la URL
+async function extractNameFromUrl(url) {
+    try {
+        const response = await fetch('http://localhost:3000/title');
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch product list');
+        }
+
+        const productList = await response.json();
+        let bestMatch = null;
+
+        productList.forEach(productName => {
+            const match = findBestMatch(productName, url);
+
+            if (match && (!bestMatch || match.length > bestMatch.length)) {
+                bestMatch = match;
+            }
+        });
+
+        console.log("Best coincidence found", bestMatch)
+        return bestMatch;
+
+    } catch (error) {
+        console.error('Error extracting product name from URL:', error);
+        return null;
+    }
+}
+
+// Función para buscar el producto coincidente en la lista
+const findBestMatch = (productName, url) => {
+    if (url.includes(productName.toLowerCase())) {
+        return productName;
+    }
+    return null;
+};
+
 // Función para aplicar el modo oscuro cuando se cambia de página
 chrome.tabs.onActivated.addListener(({ tabId }) => {
     chrome.storage.local.get('darkMode', ({ darkMode }) => {
@@ -66,7 +105,7 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
     }
 });
 
-// Listener para clic en acción de la extensión
+// Listener para el click en acción de la extensión
 chrome.action.onClicked.addListener((tab) => {
     chrome.scripting.executeScript({
         target: { tabId: tab.id },
@@ -81,7 +120,7 @@ function getFoundProductNames(callback) {
     });
 }
 
-// Actualizar badge y title
+// Función para actualizar badge y title
 function updateBadgeAndTitle() {
     getFoundProductNames((foundProductNames) => {
         const count = foundProductNames.length;
