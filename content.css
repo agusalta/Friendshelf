@@ -1,14 +1,16 @@
 .highlighted {
-  font-weight: bold;
+  font-weight: 300;
+  font-style: italic;
   cursor: pointer;
   position: relative;
   padding: 5px;
   padding-left: 18px;
   line-height: 1.5;
+  transition: font-weight 1s fade out;
 }
 
 .highlighted:hover {
-  text-decoration: line-through;
+ font-weight: bolder;
 }
 
 /* Estilo para el icono */
