@@ -75,7 +75,6 @@ function saveHighlightedTextOnHover(productName) {
 }
 
 // Función para afectar los nombres de los productos en la página
-// Función para afectar los nombres de los productos en la página
 function highlightProductNames(productNamesArray) {
     const productNamesSet = new Set(productNamesArray);
     const foundProductNames = [];
@@ -125,7 +124,6 @@ function highlightProductNames(productNamesArray) {
         observer.observe(span);
     });
 }
-
 
 // Función principal para obtener y resaltar nombres de productos
 async function fetchAndHighlightProductNames() {
