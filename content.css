@@ -1,26 +1,27 @@
 .highlighted {
-  color: #3a3ec7 !important;
   font-weight: bold;
   cursor: pointer;
+  position: relative;
+  padding: 5px;
+  padding-left: 18px;
+  line-height: 1.5;
 }
 
 .highlighted:hover {
   text-decoration: line-through;
 }
 
-.save-button {
-  background-color: #3a3ec7;
-  color: white;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 4px;
-  cursor: pointer;
+/* Estilo para el icono */
+.highlight-icon {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  background-image: url("chrome-extension://__MSG_@@extension_id__/assets/logo/start.png");
+  background-size: contain;
+  background-repeat: no-repeat;
   position: absolute;
-  top: 0; /* Ajusta la posición según sea necesario */
-  right: -30px; /* Coloca el botón a la derecha del span */
-  transition: background-color 0.3s ease;
-}
-
-.save-button:hover {
-  background-color: #5559cc;
+  left: 0%;
+  top: 45%;
+  transform: translateY(-50%);
+  vertical-align: middle;
 }

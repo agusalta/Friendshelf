@@ -62,21 +62,20 @@ function saveFoundProductNamesToLocalStorage(foundProductNames) {
     });
 }
 
-
+// Función para guardar el texto en el local storage
 function saveHighlightedTextToStorage(productName) {
     chrome.storage.local.set({ 'highlightedText': productName }, () => {
         console.log('Updated highlightedText:', productName);
     });
 }
 
-
-// Función para guardar el texto resaltado en el almacenamiento local al hacer hover
+// Función para guardar el texto al hacer hover en Chrome
 function saveHighlightedTextOnHover(productName) {
     saveHighlightedTextToStorage(productName);
 }
 
-
-// Función para resaltar nombres de productos en la página
+// Función para afectar los nombres de los productos en la página
+// Función para afectar los nombres de los productos en la página
 function highlightProductNames(productNamesArray) {
     const productNamesSet = new Set(productNamesArray);
     const foundProductNames = [];
@@ -96,11 +95,17 @@ function highlightProductNames(productNamesArray) {
                 if (productNamesSet.has(productName)) {
                     if (!span.classList.contains('highlighted')) {
                         span.classList.add('highlighted');
+
+                        // Añadir icono usando CSS y span
+                        const icon = document.createElement('span');
+                        icon.classList.add('highlight-icon');
+                        icon.style.backgroundImage = `url(${chrome.runtime.getURL('assets/logo/start.png')})`;
+                        span.appendChild(icon);
                     }
                     span.addEventListener('mouseenter', () => {
                         saveHighlightedTextToStorage(productName);
                     });
-                    
+
                     foundProductNames.push(productName);
                 }
 
@@ -120,6 +125,7 @@ function highlightProductNames(productNamesArray) {
         observer.observe(span);
     });
 }
+
 
 // Función principal para obtener y resaltar nombres de productos
 async function fetchAndHighlightProductNames() {
@@ -150,9 +156,6 @@ async function fetchAndHighlightProductNames() {
     }
 }
 
-fetchAndHighlightProductNames();
-document.addEventListener('DOMContentLoaded', fetchAndHighlightProductNames);
-
 // Detectar cambios en el DOM y actualizar los resaltados
 const observer = new MutationObserver(mutations => {
     mutations.forEach(mutation => {
@@ -162,4 +165,9 @@ const observer = new MutationObserver(mutations => {
     });
 });
 
+// Observar el DOM para detectar cambios y actualizar los resaltados
 observer.observe(document.body, { subtree: true, childList: true });
+
+// Inicializar el script al cargar la página
+fetchAndHighlightProductNames();
+document.addEventListener('DOMContentLoaded', fetchAndHighlightProductNames);
